@@ -1,0 +1,13 @@
+# Dependencias del Chatbot Escolar - PSR TP03-C2
+# Instalar con: pip install -r requirements.txt
+
+# Servidor de red / API REST
+Flask==3.0.3
+Flask-Cors==4.0.1
+
+# Red neuronal (MLP con Keras)
+tensorflow==2.17.0
+numpy==1.26.4
+
+# Procesamiento de Lenguaje Natural (lematizacion en espanol)
+nltk==3.9.1
