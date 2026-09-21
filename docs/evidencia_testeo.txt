@@ -1,0 +1,104 @@
+Evidencia de testeo de la API - Chatbot Escolar PSR TP03-C2
+Generado el 2026-09-21 18:46
+Servidor: Flask sobre http://127.0.0.1:5000
+
+
+====================================================================
+ DEMOSTRACIÓN DE RED - TESTEO DE LA API DEL CHATBOT ESCOLAR
+ Servidor bajo prueba: http://127.0.0.1:5000
+====================================================================
+
+--------------------------------------------------------------------
+RF-03 | Interfaz de Programación de Aplicaciones (API REST)
+--------------------------------------------------------------------
+  [OK]    GET /health responde que el servicio está activo
+          intenciones=14 vocabulario=224 umbral=0.6
+  [OK]    POST /chat devuelve HTTP 200 (recibido: 200)
+  [OK]    La respuesta JSON contiene el campo 'response'
+  [OK]    El campo 'response' es un texto no vacío
+          "¡Buenas! Consultame sobre trámites de Secretaría, prácticas profesiona..."
+
+--------------------------------------------------------------------
+RF-02 | Gestión de Trámites Técnicos (ejes obligatorios)
+--------------------------------------------------------------------
+  [OK]    Prácticas Profesionalizantes / Pasantías
+          "¿Cuándo empiezan las prácticas profesionalizantes?" -> tag=pasantias conf=1.0
+  [OK]    Seguridad y herramientas en Talleres
+          "¿Qué normas de seguridad hay en el taller?" -> tag=taller_seguridad conf=1.0
+  [OK]    Herramientas y Pañol
+          "¿Cómo retiro una herramienta del pañol?" -> tag=taller_herramientas conf=1.0
+  [OK]    Mesas de examen
+          "¿Cuándo son las mesas de examen?" -> tag=mesas_examen conf=1.0
+  [OK]    Mesas de examen - previas
+          "¿Cuántas materias previas puedo llevarme?" -> tag=previas conf=1.0
+  [OK]    Mesas de examen - equivalencias
+          "Vengo de otra escuela, ¿cómo pido equivalencias?" -> tag=equivalencias conf=1.0
+  [OK]    Emisión de documentación - constancia
+          "¿Cómo saco la constancia de alumno regular?" -> tag=alumno_regular conf=1.0
+  [OK]    Emisión de documentación - analítico
+          "Necesito el analítico para la facultad" -> tag=analitico conf=1.0
+
+--------------------------------------------------------------------
+RF-01 | Procesamiento de Lenguaje Natural (robustez)
+--------------------------------------------------------------------
+  [OK]    Sinónimos distintos activan la misma intención
+          ['constancia de alumno', 'certificado regular', 'papel para la obra social'] -> ['alumno_regular', 'alumno_regular', 'alumno_regular']
+  [OK]    Tolera error ortográfico: 'constansia de alunmo regular'
+          -> tag=alumno_regular conf=1.0
+  [OK]    Tolera error ortográfico: 'pasantais'
+          -> tag=pasantias conf=1.0
+  [OK]    Tolera error ortográfico: 'mesas de esamen'
+          -> tag=mesas_examen conf=1.0
+  [OK]    Tolera error ortográfico: 'seguridada en el tayer'
+          -> tag=taller_seguridad conf=1.0
+  [OK]    Tolera error ortográfico: 'nesecito el analitiko'
+          -> tag=analitico conf=0.995
+  [OK]    Entiende la abreviatura 'PPS'
+          -> tag=pasantias
+  [OK]    Entiende la abreviatura 'EPP'
+          -> tag=taller_seguridad
+
+--------------------------------------------------------------------
+RF-04 | Respuesta por Defecto (umbral de certeza del 60%)
+--------------------------------------------------------------------
+  [OK]    Deriva a Secretaría ante consulta fuera de dominio: 'asdkjhasd qwe'
+          -> fallback=True conf=0.0
+  [OK]    Deriva a Secretaría ante consulta fuera de dominio: '¿Cuál es la capital de Australia?'
+          -> fallback=True conf=0.0
+  [OK]    Deriva a Secretaría ante consulta fuera de dominio: 'Quiero pedir una pizza con muzzarella'
+          -> fallback=True conf=0.0
+  [OK]    Deriva a Secretaría ante consulta fuera de dominio: '12345 6789'
+          -> fallback=True conf=0.0
+  [OK]    Deriva a Secretaría ante consulta fuera de dominio: '!!!???'
+          -> fallback=True conf=0.0
+  [OK]    El mensaje de fallback deriva al correo institucional
+
+--------------------------------------------------------------------
+Manejo de Errores | Robustez del servidor ante entradas inválidas
+--------------------------------------------------------------------
+  [OK]    Mensaje vacío -> HTTP 400 (recibido: 400)
+  [OK]    Campo 'message' ausente -> HTTP 400 (recibido: 400)
+  [OK]    Cuerpo no-JSON -> HTTP 400 (recibido: 400)
+  [OK]    Mensaje de 600 caracteres -> HTTP 413 (recibido: 413)
+  [OK]    Entrada con HTML/script no rompe el servidor
+  [OK]    Caracteres Unicode y emojis no rompen el servidor
+  [OK]    GET sobre /chat -> HTTP 405 (recibido: 405)
+  [OK]    El servidor sigue operativo tras las entradas inválidas
+
+--------------------------------------------------------------------
+RNF-02 | Tiempo de Respuesta (< 2 segundos)
+--------------------------------------------------------------------
+  [OK]    Procesamiento de la red neuronal por debajo de 2000 ms
+          promedio=3.14 ms | máximo=3.78 ms
+  [OK]    Respuesta completa de la API (ida y vuelta) por debajo de 2000 ms
+          promedio=19.77 ms | máximo=30.54 ms | n=6
+
+====================================================================
+ RESULTADO: 36/36 verificaciones exitosas
+====================================================================
+
+
+=== Cabeceras CORS verificadas (peticion cross-origin desde el frontend) ===
+HTTP/1.1 200 OK
+Content-Type: application/json
+Access-Control-Allow-Origin: http://127.0.0.1:8080
