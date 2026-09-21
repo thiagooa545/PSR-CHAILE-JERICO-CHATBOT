@@ -1,0 +1,357 @@
+{
+  "metadata": {
+    "institucion": "Escuela Técnica",
+    "version": "1.0",
+    "descripcion": "Base de conocimiento del asistente virtual de trámites escolares. Cada intención agrupa patrones de consulta (con sinónimos, abreviaturas y errores ortográficos frecuentes) y las respuestas oficiales asociadas.",
+    "contacto_fallback": "secretaria@escuelatecnica.edu.ar"
+  },
+  "intents": [
+    {
+      "tag": "saludo",
+      "patterns": [
+        "Hola",
+        "Holaa",
+        "Ola",
+        "Buenas",
+        "Buen día",
+        "Buenos días",
+        "Buenas tardes",
+        "Buenas noches",
+        "Qué tal",
+        "Cómo andás",
+        "Hola qué tal",
+        "Hey",
+        "Buenas che",
+        "Hola buen día",
+        "Saludos"
+      ],
+      "responses": [
+        "¡Hola! Soy el asistente virtual de la escuela. Puedo ayudarte con constancias, analíticos, pasantías, mesas de examen y normas de taller. ¿Qué necesitás?",
+        "¡Buenas! Consultame sobre trámites de Secretaría, prácticas profesionalizantes, mesas de examen o seguridad en talleres.",
+        "¡Hola! ¿En qué trámite escolar te puedo dar una mano?"
+      ]
+    },
+    {
+      "tag": "despedida",
+      "patterns": [
+        "Chau",
+        "Adiós",
+        "Nos vemos",
+        "Hasta luego",
+        "Hasta mañana",
+        "Me voy",
+        "Chau gracias",
+        "Listo chau",
+        "Bye",
+        "Nos vemos luego",
+        "Hasta la próxima"
+      ],
+      "responses": [
+        "¡Hasta luego! Cualquier otra duda sobre trámites escolares, escribime.",
+        "¡Nos vemos! Que tengas un buen día.",
+        "¡Chau! Recordá que Secretaría atiende de lunes a viernes de 8:00 a 12:00 hs."
+      ]
+    },
+    {
+      "tag": "agradecimiento",
+      "patterns": [
+        "Gracias",
+        "Muchas gracias",
+        "Graciass",
+        "Mil gracias",
+        "Te agradezco",
+        "Gracias por la info",
+        "Buenísimo gracias",
+        "Perfecto gracias",
+        "Genial gracias",
+        "Sos un capo"
+      ],
+      "responses": [
+        "¡De nada! Para eso estoy.",
+        "No hay problema. Si necesitás otro trámite, consultame.",
+        "¡Un placer ayudarte!"
+      ]
+    },
+    {
+      "tag": "bot_identidad",
+      "patterns": [
+        "Quién sos",
+        "Quién eres",
+        "Qué sos",
+        "Sos un robot",
+        "Sos una persona",
+        "Con quién hablo",
+        "Qué podés hacer",
+        "En qué me podés ayudar",
+        "Para qué servís",
+        "Qué consultas respondés",
+        "Ayuda",
+        "Help",
+        "Opciones",
+        "Menú"
+      ],
+      "responses": [
+        "Soy el asistente virtual de la Escuela Técnica y funciono con una red neuronal entrenada con los trámites de la institución. Puedo responderte sobre: constancia de alumno regular, certificado analítico, prácticas profesionalizantes y pasantías, mesas de examen, materias previas, equivalencias, seguridad en talleres y laboratorios, horarios y contacto de Secretaría."
+      ]
+    },
+    {
+      "tag": "alumno_regular",
+      "patterns": [
+        "¿Cómo saco la constancia de alumno regular?",
+        "Necesito un certificado de estudio",
+        "Papel para la obra social",
+        "Constancia de alumno",
+        "Constansia de alumno regular",
+        "Certificado regular",
+        "Certificado de alumno regular",
+        "Dónde pido la constancia",
+        "Quiero pedir una constancia",
+        "Necesito el papel de la escuela para la obra social",
+        "Certificado para la asignación familiar",
+        "Papel para ANSES",
+        "Constancia para el trabajo de mi papá",
+        "Comprobante de que soy alumno",
+        "Certificado de escolaridad",
+        "Const alumno regular",
+        "Nesecito constancia",
+        "Cómo pido certificado de alumno regular",
+        "Papel para el sindicato",
+        "Constancia para la obra social de mi mamá",
+        "Certificado de asistencia a la escuela",
+        "Cuánto tarda la constancia de alumno regular"
+      ],
+      "responses": [
+        "Podés solicitar tu constancia de alumno regular en Secretaría de lunes a viernes de 8:00 a 12:00 hs, o pedirla de forma digital enviando un correo a secretaria@escuelatecnica.edu.ar con tus datos (nombre completo, DNI, curso y división). El trámite es gratuito y se entrega en 48 hs hábiles. Sirve para obra social, ANSES, asignaciones familiares y sindicatos."
+      ]
+    },
+    {
+      "tag": "analitico",
+      "patterns": [
+        "¿Cómo pido el analítico?",
+        "Certificado analítico",
+        "Analítico de materias",
+        "Analítico parcial",
+        "Necesito el analítico para la facultad",
+        "Analítico provisorio",
+        "Título secundario",
+        "Cómo consigo mi título",
+        "Analítico definitivo",
+        "Certificado de materias aprobadas",
+        "Constancia de título en trámite",
+        "Analitiko",
+        "Necesito el analítico para inscribirme en la universidad",
+        "Cuánto tarda el analítico",
+        "Dónde retiro el analítico",
+        "Papeles para anotarme en la facu",
+        "Listado de notas de todas las materias",
+        "Certificado con mis calificaciones"
+      ],
+      "responses": [
+        "El certificado analítico se solicita en Secretaría presentando DNI y el comprobante de libre deuda de biblioteca y pañol. El analítico parcial (con las materias aprobadas hasta la fecha) se entrega en 5 días hábiles. El analítico definitivo de título se tramita ante la Dirección General de Escuelas y demora entre 30 y 60 días; mientras tanto Secretaría te emite una constancia de título en trámite válida para inscripciones universitarias."
+      ]
+    },
+    {
+      "tag": "pasantias",
+      "patterns": [
+        "¿Cuándo empiezan las prácticas profesionalizantes?",
+        "Requisitos para las pasantías",
+        "¿Qué necesito para hacer las prácticas?",
+        "Pasantías",
+        "Pasantia",
+        "Prácticas profesionalizantes",
+        "PPS",
+        "Prácticas",
+        "Cuándo arrancan las pasantías",
+        "Cómo me anoto en las prácticas",
+        "Requisitos pasantías",
+        "Pasantías rentadas",
+        "Cuántas horas son las prácticas profesionalizantes",
+        "¿Necesito ficha médica para la pasantía?",
+        "Dónde hago las prácticas",
+        "Practicas profesionalisantes",
+        "Pasantías sexto año",
+        "Me pueden conseguir empresa para la pasantía",
+        "Qué papeles piden para pasantías",
+        "Seguro para las prácticas",
+        "Puedo hacer pasantías en 5to",
+        "Convenio de pasantías",
+        "Quién es el jefe de área de prácticas"
+      ],
+      "responses": [
+        "Las Prácticas Profesionalizantes inician formalmente en el segundo cuatrimestre para alumnos de 6.º año. Debés tener los talleres del ciclo superior aprobados y presentar la ficha médica actualizada al Jefe de Área. La carga total es de 200 horas reloj. La documentación requerida incluye: constancia de alumno regular, seguro escolar vigente, autorización firmada por el tutor o responsable legal si sos menor de edad, y el convenio de prácticas firmado entre la escuela y la empresa. La inscripción se realiza en el Área de Prácticas durante el mes de julio."
+      ]
+    },
+    {
+      "tag": "taller_seguridad",
+      "patterns": [
+        "Protocolo de seguridad del taller",
+        "Normas de seguridad en el taller",
+        "Qué ropa tengo que usar en el taller",
+        "Elementos de protección personal",
+        "EPP",
+        "¿Puedo entrar al taller sin guardapolvo?",
+        "Se puede entrar con ojotas al taller",
+        "Normas del laboratorio",
+        "Seguridad en el laboratorio",
+        "Qué pasa si me lastimo en el taller",
+        "Reglas del taller",
+        "¿Necesito lentes de seguridad?",
+        "Puedo usar el celular en el taller",
+        "Seguridad e higiene taller",
+        "Protección en el taller",
+        "Calzado de seguridad",
+        "Qué no se puede hacer en el taller",
+        "Accidente en el taller",
+        "Primeros auxilios taller",
+        "Puedo entrar al taller con pelo suelto",
+        "Normas de convivencia del laboratorio",
+        "Seguridad en laboratorio de química"
+      ],
+      "responses": [
+        "El ingreso a Talleres y Laboratorios exige el uso obligatorio de los Elementos de Protección Personal (EPP): guardapolvo o mameluco de mangas largas, calzado de seguridad cerrado (quedan prohibidas ojotas y zapatillas de tela), gafas de protección y protección auditiva en las áreas de corte y amolado. Está prohibido el pelo suelto, el uso de cadenas, anillos y pulseras, y el uso del celular durante la práctica. No se puede operar ninguna máquina sin la autorización y supervisión directa del docente a cargo. Ante cualquier accidente, por menor que sea, se debe avisar de inmediato al docente y registrarlo en el Libro de Actas del taller."
+      ]
+    },
+    {
+      "tag": "taller_herramientas",
+      "patterns": [
+        "Cómo pido herramientas en el taller",
+        "Pañol",
+        "Cómo retiro una herramienta",
+        "Préstamo de herramientas",
+        "Puedo llevarme herramientas a casa",
+        "Rompí una herramienta del taller",
+        "Uso de máquinas del taller",
+        "Puedo usar el torno",
+        "Quién me autoriza a usar la amoladora",
+        "Devolución de herramientas",
+        "Se me perdió una herramienta",
+        "Panyol",
+        "Herramientas del laboratorio",
+        "Cómo uso el instrumental del laboratorio",
+        "Puedo usar la soldadora",
+        "Credencial de pañol"
+      ],
+      "responses": [
+        "Las herramientas se retiran en Pañol presentando la credencial de alumno y quedan registradas a tu nombre en la planilla de préstamo. Solo pueden usarse dentro del taller y deben devolverse limpias antes de finalizar la clase; no está permitido retirarlas del establecimiento. El uso de máquinas de riesgo (torno, fresadora, amoladora, soldadora, guillotina) requiere habilitación previa del docente y supervisión permanente. Si una herramienta se rompe o se extravía, debés informarlo al responsable de Pañol en el momento para labrar el acta correspondiente."
+      ]
+    },
+    {
+      "tag": "mesas_examen",
+      "patterns": [
+        "¿Cuándo son las mesas de examen?",
+        "Mesas de examen",
+        "Mesa de examen",
+        "Fechas de mesas",
+        "Cómo me inscribo a una mesa",
+        "Inscripción a mesas de examen",
+        "Cuándo rindo",
+        "Turno de examen diciembre",
+        "Turno febrero",
+        "Mesas de diciembre",
+        "Cronograma de mesas",
+        "Hasta cuándo me puedo anotar para rendir",
+        "Mesas de esamen",
+        "Qué necesito para rendir una materia",
+        "Puedo faltar a una mesa de examen",
+        "Qué pasa si falto a la mesa",
+        "Necesito el boletín para rendir",
+        "Mesas de examen marzo",
+        "Dónde veo las fechas de examen",
+        "¿Me tengo que anotar para rendir?",
+        "Cuántas materias puedo rendir por turno"
+      ],
+      "responses": [
+        "Las mesas de examen se organizan en tres turnos: diciembre, febrero/marzo y un turno extraordinario en agosto para alumnos que adeudan hasta 2 materias. La inscripción se realiza en Preceptoría hasta 72 hs hábiles antes de la fecha de la mesa, presentando la libreta de estudiante. El cronograma se publica en la cartelera de Preceptoría y en la web de la escuela con 10 días de anticipación. Debés presentarte 15 minutos antes con DNI y libreta; la inasistencia sin certificado médico implica perder el turno."
+      ]
+    },
+    {
+      "tag": "previas",
+      "patterns": [
+        "¿Cuántas previas puedo tener?",
+        "Materias previas",
+        "Previas",
+        "Me llevo tres materias, ¿paso de año?",
+        "Cuántas materias me puedo llevar",
+        "Repito si me llevo 4 materias",
+        "Correlatividades",
+        "Qué pasa si debo materias del año pasado",
+        "Adeudo materias",
+        "Puedo pasar de año con previas",
+        "Materias adeudadas",
+        "Preevias",
+        "Cuántas previas para pasar de año",
+        "Si debo 3 materias repito?",
+        "Régimen de promoción",
+        "Qué materias son correlativas",
+        "Puedo cursar 5to debiendo materias de 3ro"
+      ],
+      "responses": [
+        "Podés promocionar al año siguiente adeudando hasta 2 (dos) materias previas. Con 3 o más materias adeudadas debés recursar el año. Además rige el régimen de correlatividades: no se puede cursar una materia del ciclo superior si se adeuda su correlativa anterior (por ejemplo, no podés cursar Taller de 5.º año si debés Taller de 4.º). El detalle de correlatividades por especialidad está disponible en Preceptoría y en la web institucional."
+      ]
+    },
+    {
+      "tag": "equivalencias",
+      "patterns": [
+        "¿Cómo pido equivalencias?",
+        "Equivalencias",
+        "Vengo de otra escuela, qué hago",
+        "Pase de escuela",
+        "Me cambio de colegio",
+        "Equivalencia de materias",
+        "Materias que no cursé en la otra escuela",
+        "Trámite de pase",
+        "Ekivalencias",
+        "Vine de otra provincia",
+        "Cambio de especialidad",
+        "Me tengo que rendir materias por el pase",
+        "Documentación para el pase",
+        "Cuánto tarda la equivalencia"
+      ],
+      "responses": [
+        "El trámite de equivalencias se inicia en Secretaría dentro de los 30 días corridos desde la fecha del pase, presentando: certificado analítico parcial de la escuela de origen, constancia de pase, DNI y los planes de estudio de las materias cursadas. La Junta de Equivalencias evalúa caso por caso y determina qué materias se reconocen y cuáles debés rendir como complementarias. La resolución demora aproximadamente 30 días hábiles y las materias complementarias se rinden en los turnos regulares de mesas de examen."
+      ]
+    },
+    {
+      "tag": "horarios",
+      "patterns": [
+        "¿Qué horario atiende Secretaría?",
+        "Horarios de secretaría",
+        "A qué hora abre la escuela",
+        "Horario de atención",
+        "Hasta qué hora atienden",
+        "Atienden los sábados",
+        "Horario preceptoría",
+        "Cuándo puedo ir a la escuela",
+        "Orarios",
+        "A qué hora cierra secretaría",
+        "Horario de pañol",
+        "Atienden al mediodía"
+      ],
+      "responses": [
+        "Secretaría atiende de lunes a viernes de 8:00 a 12:00 hs y de 14:00 a 17:00 hs. Preceptoría atiende durante todo el horario de clases (7:30 a 17:30 hs). Pañol funciona únicamente en los horarios de taller. No hay atención administrativa los sábados, domingos ni feriados."
+      ]
+    },
+    {
+      "tag": "contacto",
+      "patterns": [
+        "¿Cuál es el teléfono de la escuela?",
+        "Cómo contacto a la escuela",
+        "Mail de secretaría",
+        "Correo de la escuela",
+        "Teléfono",
+        "Dirección de la escuela",
+        "Dónde queda la escuela",
+        "Cómo hablo con un preceptor",
+        "Necesito hablar con alguien",
+        "Quiero hablar con una persona",
+        "Contacto",
+        "Email institucional",
+        "Número de la escuela",
+        "Quiero hacer un reclamo"
+      ],
+      "responses": [
+        "Podés comunicarte con la escuela por correo a secretaria@escuelatecnica.edu.ar o telefónicamente al (011) 4000-0000, de lunes a viernes de 8:00 a 17:00 hs. Para consultas académicas puntuales, Preceptoría atiende de forma presencial durante todo el horario de clases."
+      ]
+    }
+  ]
+}
