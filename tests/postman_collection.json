@@ -1,0 +1,230 @@
+{
+  "info": {
+    "name": "Chatbot Escuela Técnica - PSR TP03-C2",
+    "description": "Colección para demostrar el funcionamiento de la API REST del chatbot escolar. Importable en Postman e Insomnia. Requiere que app.py esté corriendo en http://localhost:5000.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:5000"
+    }
+  ],
+  "item": [
+    {
+      "name": "00 - Health check (GET /health)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/health",
+          "host": ["{{base_url}}"],
+          "path": ["health"]
+        },
+        "description": "Verifica que el servidor esté publicado y el modelo cargado."
+      }
+    },
+    {
+      "name": "01 - Info de la API (GET /)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/",
+          "host": ["{{base_url}}"],
+          "path": [""]
+        }
+      }
+    },
+    {
+      "name": "02 - RF-02 Constancia de alumno regular",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": \"¿Cómo saco la constancia de alumno regular?\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/chat",
+          "host": ["{{base_url}}"],
+          "path": ["chat"]
+        }
+      }
+    },
+    {
+      "name": "03 - RF-02 Pasantías / Prácticas Profesionalizantes",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": \"Requisitos para las pasantías\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/chat",
+          "host": ["{{base_url}}"],
+          "path": ["chat"]
+        }
+      }
+    },
+    {
+      "name": "04 - RF-02 Seguridad en Talleres y Laboratorios",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": \"Normas de seguridad en el taller\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/chat",
+          "host": ["{{base_url}}"],
+          "path": ["chat"]
+        }
+      }
+    },
+    {
+      "name": "05 - RF-02 Mesas de examen",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": \"¿Cuándo son las mesas de examen?\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/chat",
+          "host": ["{{base_url}}"],
+          "path": ["chat"]
+        }
+      }
+    },
+    {
+      "name": "06 - RF-02 Analítico",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": \"Necesito el analítico para la facultad\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/chat",
+          "host": ["{{base_url}}"],
+          "path": ["chat"]
+        }
+      }
+    },
+    {
+      "name": "07 - RF-01 Error ortográfico (constansia de alunmo)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": \"constansia de alunmo regular\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/chat",
+          "host": ["{{base_url}}"],
+          "path": ["chat"]
+        },
+        "description": "Debe resolver el tag alumno_regular pese al error de tipeo."
+      }
+    },
+    {
+      "name": "08 - RF-01 Sinónimo (papel para la obra social)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": \"papel para la obra social\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/chat",
+          "host": ["{{base_url}}"],
+          "path": ["chat"]
+        }
+      }
+    },
+    {
+      "name": "09 - RF-01 Abreviatura (PPS)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": \"PPS\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/chat",
+          "host": ["{{base_url}}"],
+          "path": ["chat"]
+        }
+      }
+    },
+    {
+      "name": "10 - RF-04 Fallback (consulta fuera de dominio)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": \"¿Cuál es la capital de Australia?\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/chat",
+          "host": ["{{base_url}}"],
+          "path": ["chat"]
+        },
+        "description": "Debe devolver fallback=true y derivar a Secretaría."
+      }
+    },
+    {
+      "name": "11 - Error: mensaje vacío (espera HTTP 400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message\": \"\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/chat",
+          "host": ["{{base_url}}"],
+          "path": ["chat"]
+        }
+      }
+    },
+    {
+      "name": "12 - Error: cuerpo no-JSON (espera HTTP 400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "esto no es json"
+        },
+        "url": {
+          "raw": "{{base_url}}/chat",
+          "host": ["{{base_url}}"],
+          "path": ["chat"]
+        }
+      }
+    },
+    {
+      "name": "13 - Error: método GET sobre /chat (espera HTTP 405)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/chat",
+          "host": ["{{base_url}}"],
+          "path": ["chat"]
+        }
+      }
+    }
+  ]
+}
