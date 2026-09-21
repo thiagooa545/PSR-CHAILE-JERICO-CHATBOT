@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Escuela Técnica</title>
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f4f4f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 16px;
+        }
+
+        .chat-container {
+            width: 400px;
+            max-width: 100%;
+            height: 560px;
+            max-height: 100%;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background-color: #0056b3;
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .chat-header .estado {
+            display: block;
+            font-size: 11px;
+            font-weight: normal;
+            opacity: 0.85;
+            margin-top: 4px;
+        }
+
+        .estado.online::before  { content: "● "; color: #6ee7a8; }
+        .estado.offline::before { content: "● "; color: #ff9a9a; }
+
+        .chat-box {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: #fafafa;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            padding: 10px 14px;
+            border-radius: 15px;
+            max-width: 80%;
+            font-size: 14px;
+            line-height: 1.4;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            background-color: #007bff;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+
+        .bot-message {
+            background-color: #e9ecef;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+
+        .error-message {
+            background-color: #fdecea;
+            color: #a12622;
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+
+        /* Indicador de "escribiendo" mientras viaja la petición por la red */
+        .typing { display: flex; gap: 4px; align-items: center; }
+        .typing span {
+            width: 7px; height: 7px; border-radius: 50%;
+            background-color: #999;
+            animation: parpadeo 1.2s infinite ease-in-out;
+        }
+        .typing span:nth-child(2) { animation-delay: 0.2s; }
+        .typing span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes parpadeo {
+            0%, 80%, 100% { opacity: 0.3; transform: translateY(0); }
+            40%           { opacity: 1;   transform: translateY(-3px); }
+        }
+
+        .sugerencias {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 8px 15px 0;
+            background-color: #fafafa;
+        }
+
+        .sugerencias button {
+            background: #fff;
+            border: 1px solid #0056b3;
+            color: #0056b3;
+            border-radius: 12px;
+            padding: 5px 10px;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .sugerencias button:hover { background: #0056b3; color: #fff; }
+
+        .chat-input-area {
+            display: flex;
+            border-top: 1px solid #ddd;
+            padding: 10px;
+            background: #fff;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .chat-input-area button {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 0 15px;
+            margin-left: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .chat-input-area button:hover:enabled { background-color: #004085; }
+        .chat-input-area button:disabled { background-color: #9bb6d4; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="chat-header">
+        Asistente de Trámites Escolares
+        <span class="estado" id="estado">Conectando con el servidor...</span>
+    </div>
+
+    <div class="chat-box" id="chatBox">
+        <div class="message bot-message">¡Hola! Soy el asistente virtual. ¿Qué duda tenés sobre los trámites, talleres o pasantías de la escuela?</div>
+    </div>
+
+    <div class="sugerencias">
+        <button onclick="enviarSugerencia('¿Cómo saco la constancia de alumno regular?')">Constancia</button>
+        <button onclick="enviarSugerencia('Requisitos para las pasantías')">Pasantías</button>
+        <button onclick="enviarSugerencia('¿Cuándo son las mesas de examen?')">Mesas</button>
+        <button onclick="enviarSugerencia('Normas de seguridad en el taller')">Taller</button>
+    </div>
+
+    <div class="chat-input-area">
+        <input type="text" id="userInput" placeholder="Escribí tu consulta acá..."
+               onkeypress="handleKeyPress(event)" autocomplete="off" maxlength="500">
+        <button id="sendBtn" onclick="sendMessage()">Enviar</button>
+    </div>
+</div>
+
+<script>
+    // Dirección de red de la API de Python (servidor Flask).
+    // El frontend y el backend viven en procesos y puertos distintos: toda la
+    // comunicación ocurre por HTTP, cumpliendo la arquitectura desacoplada.
+    const API_URL = 'http://127.0.0.1:5000/chat';
+    const HEALTH_URL = 'http://127.0.0.1:5000/health';
+
+    const inputField = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const chatBox = document.getElementById('chatBox');
+    const estado = document.getElementById('estado');
+
+    // Verifica al cargar la página si el servidor de red está publicado.
+    async function verificarConexion() {
+        try {
+            const r = await fetch(HEALTH_URL);
+            const d = await r.json();
+            estado.className = 'estado online';
+            estado.textContent = `En línea · ${d.intenciones} trámites disponibles`;
+        } catch {
+            estado.className = 'estado offline';
+            estado.textContent = 'Sin conexión con el servidor (puerto 5000)';
+        }
+    }
+
+    // Función principal para enviar el mensaje por la red
+    async function sendMessage() {
+        const text = inputField.value.trim();
+        if (text === '') return;
+
+        // 1. Mostrar el mensaje del usuario en la pantalla
+        appendMessage(text, 'user-message');
+        inputField.value = '';
+        bloquearEntrada(true);
+
+        const indicador = mostrarEscribiendo();
+
+        try {
+            // 2. Realizar la petición de red (HTTP POST) usando fetch()
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: text })  // objeto convertido a texto JSON
+            });
+
+            // 3. Procesar la respuesta JSON que devuelve la Red Neuronal
+            const data = await response.json();
+            indicador.remove();
+
+            if (!response.ok) {
+                appendMessage(data.response || 'Error en la respuesta del servidor', 'error-message');
+            } else {
+                // 4. Mostrar la respuesta del bot en pantalla
+                appendMessage(data.response, 'bot-message');
+            }
+
+        } catch (error) {
+            console.error('Error de red:', error);
+            indicador.remove();
+            appendMessage(
+                'Error de red: no se pudo conectar con el servidor del chatbot. ' +
+                'Verificá que app.py esté corriendo en el puerto 5000.',
+                'error-message'
+            );
+            estado.className = 'estado offline';
+            estado.textContent = 'Sin conexión con el servidor (puerto 5000)';
+        } finally {
+            bloquearEntrada(false);
+            inputField.focus();
+        }
+    }
+
+    // Función auxiliar para agregar las burbujas de texto al contenedor visual
+    function appendMessage(text, className) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', className);
+        messageDiv.innerText = text;   // innerText evita inyección de HTML
+        chatBox.appendChild(messageDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;  // auto-scroll al último mensaje
+        return messageDiv;
+    }
+
+    function mostrarEscribiendo() {
+        const div = document.createElement('div');
+        div.classList.add('message', 'bot-message', 'typing');
+        div.innerHTML = '<span></span><span></span><span></span>';
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        return div;
+    }
+
+    function bloquearEntrada(bloquear) {
+        sendBtn.disabled = bloquear;
+        inputField.disabled = bloquear;
+    }
+
+    function enviarSugerencia(texto) {
+        inputField.value = texto;
+        sendMessage();
+    }
+
+    // Permite mandar el mensaje al presionar la tecla 'Enter'
+    function handleKeyPress(event) {
+        if (event.key === 'Enter') {
+            sendMessage();
+        }
+    }
+
+    verificarConexion();
+    inputField.focus();
+</script>
+
+</body>
+</html>
