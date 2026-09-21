@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "institucion": "Escuela Técnica",
+    "institucion": "Escuela Técnica N.º 36 Almirante Guillermo Brown",
     "version": "1.0",
     "descripcion": "Base de conocimiento del asistente virtual de trámites escolares. Cada intención agrupa patrones de consulta (con sinónimos, abreviaturas y errores ortográficos frecuentes) y las respuestas oficiales asociadas.",
-    "contacto_fallback": "secretaria@escuelatecnica.edu.ar"
+    "contacto_fallback": "secretaria@almirantebrown36.edu.ar"
   },
   "intents": [
     {
@@ -91,7 +91,7 @@
         "Menú"
       ],
       "responses": [
-        "Soy el asistente virtual de la Escuela Técnica y funciono con una red neuronal entrenada con los trámites de la institución. Puedo responderte sobre: constancia de alumno regular, certificado analítico, prácticas profesionalizantes y pasantías, mesas de examen, materias previas, equivalencias, seguridad en talleres y laboratorios, horarios y contacto de Secretaría."
+        "Soy el asistente virtual de la Escuela Técnica N.º 36 Almirante Guillermo Brown y funciono con una red neuronal entrenada con los trámites de la institución. Puedo responderte sobre: constancia de alumno regular, certificado analítico, prácticas profesionalizantes y pasantías, mesas de examen, materias previas, equivalencias, seguridad en talleres y laboratorios, horarios y contacto de Secretaría."
       ]
     },
     {
@@ -121,7 +121,7 @@
         "Cuánto tarda la constancia de alumno regular"
       ],
       "responses": [
-        "Podés solicitar tu constancia de alumno regular en Secretaría de lunes a viernes de 8:00 a 12:00 hs, o pedirla de forma digital enviando un correo a secretaria@escuelatecnica.edu.ar con tus datos (nombre completo, DNI, curso y división). El trámite es gratuito y se entrega en 48 hs hábiles. Sirve para obra social, ANSES, asignaciones familiares y sindicatos."
+        "Podés solicitar tu constancia de alumno regular en Secretaría de lunes a viernes de 8:00 a 12:00 hs, o pedirla de forma digital enviando un correo a secretaria@almirantebrown36.edu.ar con tus datos (nombre completo, DNI, curso y división). El trámite es gratuito y se entrega en 48 hs hábiles. Sirve para obra social, ANSES, asignaciones familiares y sindicatos."
       ]
     },
     {
@@ -350,7 +350,7 @@
         "Quiero hacer un reclamo"
       ],
       "responses": [
-        "Podés comunicarte con la escuela por correo a secretaria@escuelatecnica.edu.ar o telefónicamente al (011) 4000-0000, de lunes a viernes de 8:00 a 17:00 hs. Para consultas académicas puntuales, Preceptoría atiende de forma presencial durante todo el horario de clases."
+        "Podés comunicarte con la escuela por correo a secretaria@almirantebrown36.edu.ar o telefónicamente al (011) 4000-0000, de lunes a viernes de 8:00 a 17:00 hs. Para consultas académicas puntuales, Preceptoría atiende de forma presencial durante todo el horario de clases."
       ]
     }
   ]

@@ -1,13 +1,13 @@
 {
   "info": {
-    "name": "Chatbot Escuela Técnica - PSR TP03-C2",
-    "description": "Colección para demostrar el funcionamiento de la API REST del chatbot escolar. Importable en Postman e Insomnia. Requiere que app.py esté corriendo en http://localhost:5000.",
+    "name": "Chatbot E.T. N.º 36 - PSR TP03-C2",
+    "description": "Colección para demostrar el funcionamiento de la API REST del chatbot escolar. Importable en Postman e Insomnia. Requiere que app.py esté corriendo en http://127.0.0.1:5000.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
     {
       "key": "base_url",
-      "value": "http://localhost:5000"
+      "value": "http://127.0.0.1:5000"
     }
   ],
   "item": [

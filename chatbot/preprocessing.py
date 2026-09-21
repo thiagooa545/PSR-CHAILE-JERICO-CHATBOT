@@ -1,9 +1,4 @@
 """Procesamiento de Lenguaje Natural (RF-01).
-
-Pipeline de normalizacion del texto del usuario. Es el mismo modulo que usan
-el entrenamiento y el servidor, garantizando que una frase se vectorice
-siempre igual.
-
 Etapas:
     1. Normalizacion  -> minusculas, sin tildes, sin signos de puntuacion.
     2. Tokenizacion   -> separacion en palabras por expresion regular.
@@ -12,9 +7,6 @@ Etapas:
                          ("constancias", "constancia" -> "constanc").
     5. Correccion difusa -> los errores de tipeo se aproximan al termino mas
                          parecido del vocabulario aprendido (difflib).
-
-Las etapas 1, 4 y 5 son las que permiten cumplir RF-01: entender al usuario
-aunque escriba con errores ortograficos, abreviaturas o sinonimos.
 """
 
 import re
@@ -25,11 +17,7 @@ from functools import lru_cache
 import numpy as np
 from nltk.stem import SnowballStemmer
 
-# Stemmer algoritmico: no requiere descargar corpus, funciona sin conexion.
 _STEMMER = SnowballStemmer("spanish")
-
-# Palabras vacias frecuentes del espanol rioplatense. No aportan informacion
-# para distinguir una intencion de otra, por lo que se descartan.
 STOPWORDS = {
     "a", "al", "algo", "ante", "aqui", "asi", "cada", "como", "con", "cual",
     "cuales", "de", "del", "desde", "donde", "dos", "el", "ella", "ellos",
@@ -65,13 +53,8 @@ def tokenizar(texto: str) -> list:
 
 
 def clave_fonetica(palabra: str) -> str:
-    """Reduce una palabra a como suena, no a como se escribe.
-
-    La mayoria de los errores ortograficos del castellano son homofonos: el
-    alumno escribe lo que oye. Al colapsar los pares de letras que suenan igual,
-    la palabra mal escrita y la correcta terminan en la misma clave y la
-    comparacion por similitud deja de ser necesaria:
-
+    """Esto es para reducir una palabra a como suena, no a como se escribe.
+        EJ:
         taller / tayer        -> tayer      (yeismo: ll = y)
         constancia / constansia -> konstansia  (seseo: c ante e/i = s = z)
         analitico / analitiko -> analitiko  (c fuerte = k = qu)
@@ -92,7 +75,6 @@ def clave_fonetica(palabra: str) -> str:
     p = p.replace("x", "ks")
     return re.sub(r"(.)\1+", r"\1", p)     # colapsa letras repetidas
 
-
 @lru_cache(maxsize=4)
 def _indice_fonetico(lexico: tuple) -> dict:
     """Mapea clave fonetica -> palabra del dominio. Se calcula una sola vez."""
@@ -101,49 +83,20 @@ def _indice_fonetico(lexico: tuple) -> dict:
         indice.setdefault(clave_fonetica(palabra), palabra)
     return indice
 
-
 def tokens_significativos(texto: str) -> list:
     """Tokens normalizados sin stopwords, todavia SIN lematizar.
-
-    Se expone aparte porque la correccion de errores de tipeo debe trabajar
-    sobre la palabra completa: las raices de una palabra bien y mal escrita
-    divergen demasiado ("taller" -> "tall" pero "tayer" -> "tay") y dejarian de
-    parecerse entre si.
     """
     return [t for t in tokenizar(texto) if t not in STOPWORDS and len(t) > 1]
 
-
 def lematizar(tokens: list) -> list:
-    """Reduce cada token a su raiz mediante el algoritmo Snowball."""
     return [_STEMMER.stem(token) for token in tokens]
 
-
 def procesar(texto: str) -> list:
-    """Pipeline completo: texto crudo -> lista de raices significativas."""
     return lematizar(tokens_significativos(texto))
-
 
 def bolsa_de_palabras(texto: str, vocabulario: list, lexico: list = None,
                       usar_fuzzy: bool = True):
     """Convierte una frase en el vector binario que espera la red neuronal.
-
-    Args:
-        texto: consulta escrita por el usuario.
-        vocabulario: lista ordenada de raices aprendidas en el entrenamiento.
-        lexico: palabras completas (sin lematizar) vistas en el entrenamiento.
-            Es contra esta lista que se corrigen los errores de tipeo.
-        usar_fuzzy: si es True, un token desconocido se asocia al termino mas
-            parecido del dominio (tolerancia a errores ortograficos).
-
-    Returns:
-        (vector, coincidencias, total) donde vector es un np.ndarray de 0 y 1
-        del tamano del vocabulario, coincidencias es la cantidad de palabras de
-        la consulta reconocidas dentro del dominio escolar y total es la
-        cantidad de palabras significativas que tenia la consulta.
-
-        El cociente coincidencias/total es la "cobertura lexica": indica que
-        porcentaje de lo que escribio el usuario pertenece realmente al dominio
-        de la escuela, y se usa para decidir el fallback del RF-04.
     """
     indice = {raiz: i for i, raiz in enumerate(vocabulario)}
     vector = np.zeros(len(vocabulario), dtype=np.float32)
@@ -163,12 +116,8 @@ def bolsa_de_palabras(texto: str, vocabulario: list, lexico: list = None,
 
         fonetico = _indice_fonetico(tuple(lexico))
         clave = clave_fonetica(palabra)
-
-        # 1) El error es homofono ("tayer" por "taller"): misma clave fonetica.
         candidata = fonetico.get(clave)
 
-        # 2) El error es de tecleo ("alunmo" por "alumno"): se busca la clave
-        #    mas parecida, ya normalizada foneticamente.
         if candidata is None:
             similares = get_close_matches(
                 clave, list(fonetico.keys()), n=1, cutoff=FUZZY_CUTOFF

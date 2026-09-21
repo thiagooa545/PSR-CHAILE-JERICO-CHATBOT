@@ -16,7 +16,6 @@ Artefactos generados en model/:
 
 import sys
 
-# En Windows la consola usa cp1252 por defecto y rompe las tildes del castellano.
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
@@ -50,15 +49,6 @@ def cargar_intents() -> dict:
 
 
 def construir_corpus(intents: dict):
-    """Aplica el pipeline de PLN y arma vocabulario, clases y documentos.
-
-    Returns:
-        words: vocabulario ordenado y sin duplicados (raices lematizadas).
-        classes: lista ordenada de tags.
-        documents: pares (tokens_procesados, tag) usados como ejemplos.
-        lexico: palabras completas sin lematizar; el servidor las usa para
-            corregir los errores de tipeo del usuario antes de lematizar.
-    """
     words, classes, documents, lexico = [], [], [], []
 
     for intent in intents["intents"]:
@@ -82,11 +72,7 @@ def construir_corpus(intents: dict):
 
 
 def construir_dataset(words: list, classes: list, documents: list):
-    """Vectoriza los documentos con Bolsa de Palabras y codifica las salidas.
-
-    Cada ejemplo de entrada es un vector binario del largo del vocabulario y
-    cada salida es un vector one-hot del largo de la cantidad de clases.
-    """
+    """Vectoriza los documentos con Bolsa de Palabras y codifica las salidas."""
     indice = {palabra: i for i, palabra in enumerate(words)}
     salida_vacia = [0] * len(classes)
     training = []
@@ -105,18 +91,7 @@ def construir_dataset(words: list, classes: list, documents: list):
     train_y = np.array([t[1] for t in training], dtype=np.float32)
     return train_x, train_y
 
-
 def construir_modelo(n_entradas: int, n_salidas: int) -> Sequential:
-    """Red neuronal secuencial densa (MLP) para clasificacion multiclase.
-
-    Arquitectura: 128 -> Dropout -> 64 -> Dropout -> softmax
-    - ReLU en las capas ocultas: converge rapido y evita el desvanecimiento
-      del gradiente.
-    - Dropout del 50%: regularizacion necesaria porque el dataset es chico.
-    - Softmax en la salida: devuelve una distribucion de probabilidad sobre
-      las intenciones, lo que permite aplicar el umbral de certeza del RF-04.
-    - Perdida categorical_crossentropy: la adecuada para salidas one-hot.
-    """
     model = Sequential([
         Input(shape=(n_entradas,), name="bolsa_de_palabras"),
         Dense(config.HIDDEN_UNITS[0], activation="relu"),

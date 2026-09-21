@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot Escuela Técnica</title>
+    <title>Chatbot E.T. N.º 36</title>
     <style>
         * { box-sizing: border-box; }
 
@@ -194,7 +194,6 @@
     const chatBox = document.getElementById('chatBox');
     const estado = document.getElementById('estado');
 
-    // Verifica al cargar la página si el servidor de red está publicado.
     async function verificarConexion() {
         try {
             const r = await fetch(HEALTH_URL);
@@ -212,7 +211,7 @@
         const text = inputField.value.trim();
         if (text === '') return;
 
-        // 1. Mostrar el mensaje del usuario en la pantalla
+        // 1. Muestra el mensaje del usuario en la pantalla
         appendMessage(text, 'user-message');
         inputField.value = '';
         bloquearEntrada(true);
@@ -220,21 +219,21 @@
         const indicador = mostrarEscribiendo();
 
         try {
-            // 2. Realizar la petición de red (HTTP POST) usando fetch()
+            // 2. Hace la petición de red (HTTP POST) usando fetch()
             const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: text })  // objeto convertido a texto JSON
+                body: JSON.stringify({ message: text })
             });
 
-            // 3. Procesar la respuesta JSON que devuelve la Red Neuronal
+            // 3. Procesar la respuesta JSON que devuelve la red neuronal
             const data = await response.json();
             indicador.remove();
 
             if (!response.ok) {
                 appendMessage(data.response || 'Error en la respuesta del servidor', 'error-message');
             } else {
-                // 4. Mostrar la respuesta del bot en pantalla
+                // 4. Muestra la respuesta del bot en pantalla
                 appendMessage(data.response, 'bot-message');
             }
 
@@ -258,9 +257,9 @@
     function appendMessage(text, className) {
         const messageDiv = document.createElement('div');
         messageDiv.classList.add('message', className);
-        messageDiv.innerText = text;   // innerText evita inyección de HTML
+        messageDiv.innerText = text;
         chatBox.appendChild(messageDiv);
-        chatBox.scrollTop = chatBox.scrollHeight;  // auto-scroll al último mensaje
+        chatBox.scrollTop = chatBox.scrollHeight;
         return messageDiv;
     }
 
@@ -282,8 +281,7 @@
         inputField.value = texto;
         sendMessage();
     }
-
-    // Permite mandar el mensaje al presionar la tecla 'Enter'
+    // Esto basicamente es para mandar el mensaje al presionar la tecla 'enter'
     function handleKeyPress(event) {
         if (event.key === 'Enter') {
             sendMessage();

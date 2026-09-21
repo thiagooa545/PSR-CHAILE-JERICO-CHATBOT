@@ -2,11 +2,10 @@
 
 Ejecutar (con el servidor app.py ya levantado, en otra terminal):
     python tests/test_api.py
-
-Este script actúa como cliente de red: abre conexiones HTTP reales contra
-http://localhost:5000 usando únicamente la biblioteca estándar de Python
-(urllib), sin importar nada del backend. Verifica uno por uno los
-requerimientos del trabajo práctico y deja la evidencia impresa en consola.
+    
+Este script hace como cliente de red: abre conexiones http usando unicamente la biblioteca
+estandar de python (urllib), sin que le importe nada del backend. Esto verifica
+uno por uno los requerimientos del trabajo practico.
 
 Cobertura:
     RF-01  Comprensión de lenguaje natural con errores ortográficos y sinónimos
@@ -18,7 +17,6 @@ Cobertura:
 
 import sys
 
-# En Windows la consola usa cp1252 por defecto y rompe las tildes del castellano.
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
@@ -26,11 +24,6 @@ import json
 import time
 import urllib.error
 import urllib.request
-
-# Se usa 127.0.0.1 y no "localhost": en Windows el nombre "localhost" resuelve
-# primero a IPv6 (::1) y, como el servidor escucha en IPv4, el cliente pierde
-# hasta 2 segundos esperando esa conexión antes de reintentar. Apuntando
-# directo a la dirección IPv4 la medición refleja el tiempo real del servidor.
 BASE_URL = "http://127.0.0.1:5000"
 CHAT_URL = f"{BASE_URL}/chat"
 HEALTH_URL = f"{BASE_URL}/health"
@@ -42,7 +35,6 @@ _resultados = {"ok": 0, "fallo": 0}
 
 
 def post_chat(mensaje, content_type="application/json"):
-    """Envía un POST a /chat y devuelve (status_code, dict_respuesta, ms)."""
     cuerpo = json.dumps({"message": mensaje}).encode("utf-8")
     req = urllib.request.Request(
         CHAT_URL, data=cuerpo, headers={"Content-Type": content_type}, method="POST"
@@ -58,7 +50,6 @@ def post_chat(mensaje, content_type="application/json"):
 
 
 def post_crudo(cuerpo_bytes, content_type="application/json"):
-    """Envía un cuerpo arbitrario para probar el manejo de errores."""
     req = urllib.request.Request(
         CHAT_URL, data=cuerpo_bytes, headers={"Content-Type": content_type}, method="POST"
     )
@@ -83,10 +74,7 @@ def verificar(condicion, descripcion, detalle=""):
 def titulo(texto):
     print(f"\n{AMARILLO}{'-' * 68}\n{texto}\n{'-' * 68}{RESET}")
 
-
-# ---------------------------------------------------------------------------
 # RF-03: contrato de la API REST
-# ---------------------------------------------------------------------------
 def test_api_rest():
     titulo("RF-03 | Interfaz de Programación de Aplicaciones (API REST)")
 
@@ -108,10 +96,7 @@ def test_api_rest():
         f'"{data.get("response", "")[:70]}..."',
     )
 
-
-# ---------------------------------------------------------------------------
 # RF-02: los cuatro ejes temáticos obligatorios
-# ---------------------------------------------------------------------------
 def test_ejes_tematicos():
     titulo("RF-02 | Gestión de Trámites Técnicos (ejes obligatorios)")
 
@@ -142,14 +127,11 @@ def test_ejes_tematicos():
             f'"{pregunta}" -> tag={data.get("tag")} conf={data.get("confidence")}',
         )
 
-
-# ---------------------------------------------------------------------------
 # RF-01: PLN con errores ortográficos, abreviaturas y sinónimos
-# ---------------------------------------------------------------------------
 def test_lenguaje_natural():
     titulo("RF-01 | Procesamiento de Lenguaje Natural (robustez)")
 
-    # Sinónimos distintos que deben activar la MISMA respuesta.
+    # Sinónimos distintos que deben activar la misma respuesta.
     grupo_constancia = [
         "constancia de alumno",
         "certificado regular",
@@ -190,10 +172,7 @@ def test_lenguaje_natural():
             f'-> tag={data.get("tag")}',
         )
 
-
-# ---------------------------------------------------------------------------
 # RF-04: respuesta por defecto (fallback)
-# ---------------------------------------------------------------------------
 def test_fallback():
     titulo("RF-04 | Respuesta por Defecto (umbral de certeza del 60%)")
 
@@ -214,14 +193,11 @@ def test_fallback():
 
     _, data, _ = post_chat("no entiendo nada de esto xyz")
     verificar(
-        "secretaria@escuelatecnica.edu.ar" in data.get("response", ""),
+        "secretaria@almirantebrown36.edu.ar" in data.get("response", ""),
         "El mensaje de fallback deriva al correo institucional",
     )
 
-
-# ---------------------------------------------------------------------------
 # Manejo de errores: el servidor no debe caerse nunca
-# ---------------------------------------------------------------------------
 def test_manejo_errores():
     titulo("Manejo de Errores | Robustez del servidor ante entradas inválidas")
 
@@ -255,10 +231,7 @@ def test_manejo_errores():
     status, data, _ = post_chat("Hola")
     verificar(status == 200, "El servidor sigue operativo tras las entradas inválidas")
 
-
-# ---------------------------------------------------------------------------
 # RNF-02: tiempo de respuesta
-# ---------------------------------------------------------------------------
 def test_tiempo_respuesta():
     titulo("RNF-02 | Tiempo de Respuesta (< 2 segundos)")
 
